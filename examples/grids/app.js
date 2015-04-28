@@ -69,25 +69,6 @@ EW.define("MainViewport", {
   }]
 });
 
-EW.defineController("Binding", {
-  views: [],
-  init: function () {
-    return {
-      mainViewport: {
-        "#gridProducts": {
-          onSelectChange: this.onSelectProduct
-        }
-      }
-    };
-  },
-  onSelectProduct: function () {
-    var product = this.getSelectedItem();
-      details = EW.find(this, "#details");
-    details.data = product;
-    details.refresh();
-  }
-});
-
 EW.application({
   name: "BT",
   requires: [],
