@@ -57,15 +57,15 @@ EW.define("MainViewport", {
       {id: "genre_s", header: "Genre", width: 100},
       {id: "cat", header: "Product Group", width: 200}],
     select: "row",
+    defaultData: data[0],
     data: data
   }, {
     view: "template",
-    itemId: "details",
+    itemId: "details",    
     template: "Title: <a href=\"#\">#name#</a><br>" +
       "Author: #author#<br>" +
       "Genre: #genre_s#<br>" +
-      "Product Group: #cat#",
-    data: data[0]
+      "Product Group: #cat#"    
   }]
 });
 
@@ -91,5 +91,10 @@ EW.defineController("Binding", {
 EW.application({
   name: "BT",
   requires: [],
-  autoViewport: true
+  autoViewport: true,
+  launch: function (viewport) {
+    var detailsTemplate = EW.find(viewport, "#details"),
+      gridProducts = EW.find(viewport, "#gridProducts");
+    detailsTemplate.bind(gridProducts);
+  }
 });
