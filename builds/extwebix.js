@@ -17,6 +17,7 @@ me = module.exports = {
     me.controllers[name] = controller;
     async.each(controller.views, function (view, callback) {
       viewMgr.load(view, callback);
+    }, function () {
       _.extend(me.aliases, controller.init());
     });
   },
@@ -153,10 +154,10 @@ me = module.exports = {
     if (!window[config.name]) {
       window[config.name] = {};
     }
-    async.each(config.requires, function (require, callback) {
+    async.each(config.requires || [], function (require, callback) {
       utilMgr.load(require, callback);
     }, function () {
-      async.each(config.controllers, function (controller, callback) {
+      async.each(config.controllers || [], function (controller, callback) {
         controllerMgr.load(controller, callback);
       }, function () {
         webix.ready(function () {
