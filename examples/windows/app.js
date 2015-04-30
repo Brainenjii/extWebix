@@ -2,7 +2,7 @@ EW.define("WindowLayout", {
   alias: "windowLayout",
   view: "window",
   animate: true,
-  position: "top",
+  position: "center",
   width: 800,
   height: 600,
   move: true,
