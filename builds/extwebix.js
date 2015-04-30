@@ -25,10 +25,16 @@ me = module.exports = {
     var selectorsConfig = me.aliases[alias];
     if (!selectorsConfig) {return; }
     _.each(selectorsConfig, function (eventsConfig, selector) {
-      _.each(eventsConfig, function (handler, event) {
-        var element = $$(view.config.id + selector);
-        if (element) {element.attachEvent(event, handler); }
-      });
+      switch (typeof eventsConfig) {
+      case "function":
+        view.attachEvent(selector, eventsConfig);
+        break;
+      case "object":
+        _.each(eventsConfig, function (handler, event) {
+          var element = $$(view.config.id + selector);
+          if (element) {element.attachEvent(event, handler); }
+        });
+      }
     });
   }
 };
