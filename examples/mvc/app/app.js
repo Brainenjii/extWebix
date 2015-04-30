@@ -1,4 +1,5 @@
 EW.application({
   controllers: ["Main"],
-  autoViewport: true
-});g
+  autoViewport: true,
+  name: "Books"
+});

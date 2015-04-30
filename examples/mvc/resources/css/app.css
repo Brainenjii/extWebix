@@ -1,0 +1,19 @@
+.book-image {
+    float: left;
+    width: 30%;
+}
+
+.book-name {
+    float: left;
+    width: 70%;
+}
+
+.book-author {
+    float: left;
+    width: 70%;
+}
+
+.book-detail {
+    float: left;
+    width: 70%;
+}
