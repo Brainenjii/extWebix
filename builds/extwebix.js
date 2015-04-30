@@ -129,6 +129,8 @@ me = module.exports = {
 
     controllerMgr.assignEvents(alias, widget);
 
+    widget.callEvent("init", [widget]);
+
     return widget;
   }
 };
