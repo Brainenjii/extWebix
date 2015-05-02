@@ -15,6 +15,7 @@ EW.defineController("Books.controller.Main", {
       viewTemplate = EW.find(viewport, "#viewTemplate");
     listBooks.load("../data/products.json");
     viewTemplate.bind(listBooks);
+    listBooks.select(listBooks.getIdByIndex(0));
   },
   selectBook: function (id) {
     var bookInfo = this.getItem(id),
