@@ -14,6 +14,7 @@ EW.define("MainViewport", {
       {id:"title", header:"title", width:250}
     ],
     scroll: true,
+    select: "cell",
     url: "../data/forum-data.json",
     dataType: "json"
   }]
