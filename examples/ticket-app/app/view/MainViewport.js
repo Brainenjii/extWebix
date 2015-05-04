@@ -68,6 +68,7 @@ EW.define("Ticket.view.MainViewport", {
                 view: "datatable",
                 itemId: "gridTickets",
                 scroll: false,
+                select: true,
                 columns: [{id: "id", header: "Id"},
                   {id: "title", header: "Title", fillspace: true},
                   {id: "created", header: "Created"},
@@ -100,7 +101,10 @@ EW.define("Ticket.view.MainViewport", {
                 view: "datatable",
                 itemId: "gridMembers",
                 scroll: false,
-                columns: [{id: "name", header: "Name", fillspace: true}]
+                select: true,
+                columns: [{id: "name", header: "Name", fillspace: true},
+                  {id:"edit", header:"", template:"{common.editIcon()}",
+                    width: 40}]
               }]
             }]
           }]
