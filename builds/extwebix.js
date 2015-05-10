@@ -7,6 +7,7 @@ me = module.exports = {
   controllers: {},
   aliases: {},
   load: function (name, callback) {
+    if (EW.loader === false) {return callback(); }
     if (!me.controllers[name]) {
       return loader.load("app/controller/" + name, callback);
     }
@@ -15,6 +16,7 @@ me = module.exports = {
   },
   process: function (name, controller) {
     me.controllers[name] = controller;
+    if (EW.loader === false) {return _.extend(me.aliases, controller.init()); }
     async.each(controller.views, function (view, callback) {
       viewMgr.load(view, callback);
     }, function () {
@@ -56,6 +58,7 @@ var me,
 me = module.exports = {
   utils: {},
   load: function (name, callback) {
+    if (EW.loader === false) {return callback(); }
     if (!me.utils[name]) {
       return loader.load("app/" + name, callback);
     }
@@ -76,6 +79,7 @@ me = module.exports = {
       }
     });
     _.assign(parent, config);
+    if (config.init) {config.init(); }
   }
 };
 },{"./loader":2}],4:[function(require,module,exports){
@@ -159,8 +163,13 @@ me = module.exports = {
     return $$(widget.getTopParentView().config.id + selector);
   },
   application: function (config) {
+    config = config || {};
     if (!window[config.name]) {
       window[config.name] = {};
+    }
+
+    if (config.loader === false) {
+      EW.skipLoading = true;
     }
     async.each(config.requires || [], function (require, callback) {
       utilMgr.load(require, callback);
