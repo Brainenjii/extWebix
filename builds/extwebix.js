@@ -1,87 +1,192 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
+
+module.exports = window.async;
+
+},{}],2:[function(require,module,exports){
+"use strict";
+
+module.exports = window._;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
 var me,
-  loader = require("./loader"),
-  viewMgr = require("./view");
+  _ = require("lodash"),
+  async = require("async"),
+  viewMgr = require("./view"),
+  loader = require("./loader");
+
 me = module.exports = {
   controllers: {},
   aliases: {},
-  load: function (name, callback) {
-    if (!me.controllers[name]) {
-      return loader.load("app/controller/" + name, callback);
+  load: function load (name, callback) {
+
+    if (EW.loader === false) {
+
+      return callback();
+
     }
+
+    if (!me.controllers[name]) {
+
+      return loader.load("app/controller/" + name, callback);
+
+    }
+
     me.controllers[name] = true;
     callback();
+
   },
-  process: function (name, controller) {
+
+  process: function process (name, controller) {
+
     me.controllers[name] = controller;
-    async.each(controller.views, function (view, callback) {
+
+    if (EW.loader === false) {
+
+      return _.extend(me.aliases, controller.init());
+
+    }
+
+    async.each(controller.views, function viewHandler (view, callback) {
+
       viewMgr.load(view, callback);
-    }, function () {
+
+    }, function controllersHandler () {
+
       _.extend(me.aliases, controller.init());
+
     });
+
   },
-  assignEvents: function (alias, view) {
+
+  assignEvents: function assignEvents (alias, view) {
+
     var selectorsConfig = me.aliases[alias];
-    if (!selectorsConfig) {return; }
-    _.each(selectorsConfig, function (eventsConfig, selector) {
+
+    if (!selectorsConfig) {
+
+      return;
+
+    }
+
+    _.each(selectorsConfig, function eventHandler (eventsConfig, selector) {
+
       switch (typeof eventsConfig) {
       case "function":
         view.attachEvent(selector, eventsConfig);
         break;
       case "object":
-        _.each(eventsConfig, function (handler, event) {
+        _.each(eventsConfig, function eventHandler (handler, event) {
+
           var element = $$(view.config.id + selector);
-          if (element) {element.attachEvent(event, handler); }
+
+          if (element) {
+
+            element.attachEvent(event, handler);
+
+          }
+
         });
+        break;
+      default:
       }
+
     });
+
   }
+
 };
-},{"./loader":2,"./view":4}],2:[function(require,module,exports){
+
+},{"./loader":4,"./view":6,"async":1,"lodash":2}],4:[function(require,module,exports){
 "use strict";
-var me;
-me = module.exports = {
-  load: function (path, callback) {
+
+module.exports = {
+
+  load: function load (path, callback) {
+
     var script = document.createElement("script");
+
     script.src = path + ".js";
     script.onload = callback;
     document.head.appendChild(script);
+
   }
+
 };
-},{}],3:[function(require,module,exports){
+
+},{}],5:[function(require,module,exports){
 "use strict";
+
 var me,
+  _ = require("lodash"),
   loader = require("./loader");
+
 me = module.exports = {
+
   utils: {},
-  load: function (name, callback) {
-    if (!me.utils[name]) {
-      return loader.load("app/" + name, callback);
+
+  load: function load (name, callback) {
+
+    if (EW.loader === false) {
+
+      return callback();
+
     }
+
+    if (!me.utils[name]) {
+
+      return loader.load("app/" + name, callback);
+
+    }
+
     me.utils[name] = true;
     callback();
+
   },
-  process: function (name, config) {
+  process: function process (name, config) {
+
     var parent, tokens = name.split(".");
-    _.each(tokens, function (token) {
+
+    _.each(tokens, function tokenHandler (token) {
+
       var holder;
-      console.log(token);
+
       holder = (parent || window)[token];
+
       if (!holder) {
+
         (parent || window)[token] = {};
         parent = (parent || window)[token];
+
       } else {
+
         parent = holder;
+
       }
+
     });
+
     _.assign(parent, config);
+
+    if (config.init) {
+
+      config.init();
+
+    }
+
   }
+
 };
-},{"./loader":2}],4:[function(require,module,exports){
+
+},{"./loader":4,"lodash":2}],6:[function(require,module,exports){
 "use strict";
+
 var me,
   controllerMgr,
+  _ = require("lodash"),
+  async = require("async"),
   loader = require("./loader"),
   childFields = ["cells", "body", "rows", "cols", "head"];
 
@@ -89,34 +194,57 @@ me = module.exports = {
   index: 0,
   views: {},
   widgets: {},
-  load: function (name, callback) {
+  load: function load (name, callback) {
+
     if (!me.views[name]) {
+
       me.views[name] = true;
       return loader.load("app/view/" + name, callback);
+
     }
+
     return callback();
+
   },
-  process: function (name, config) {
-    console.log(name);
+  process: function process (name, config) {
+
     me.widgets[config.alias] = config;
+
   },
-  processWidget: function (xtype, widget) {
+  processWidget: function processWidget (xtype, widget) {
+
     if (_.isArray(widget)) {
-      _.each(widget, function (widget) {
+
+      _.each(widget, function widgetHandler (widget) {
+
         me.processWidget(xtype, widget);
+
       });
+
     }
+
     if (widget.view && widget.itemId) {
+
       widget.id = xtype + me.index + "#" + widget.itemId;
+
     }
-    _.each(childFields, function (childField) {
+
+    _.each(childFields, function childFieldHandler (childField) {
+
       if (typeof widget[childField] === "object") {
+
         me.processWidget(xtype, widget[childField]);
+
       }
+
     });
+
   },
-  build: function (alias, config) {
+
+  build: function build (alias, config) {
+
     var widgetConfig, widget;
+
     controllerMgr = controllerMgr || require("./controller");
 
     me.index += 1;
@@ -132,53 +260,103 @@ me = module.exports = {
     widget.callEvent("init", [widget]);
 
     return widget;
+
   }
+
 };
-},{"./controller":1,"./loader":2}],"extwebix":[function(require,module,exports){
+
+},{"./controller":3,"./loader":4,"async":1,"lodash":2}],"extwebix":[function(require,module,exports){
 "use strict";
+
 var me,
+  async = require("async"),
   controllerMgr = require("./controller"),
   viewMgr = require("./view"),
   utilMgr = require("./util");
+
 me = module.exports = {
   widgets: {},
   controllers: [],
-  define: function (name, config) {
+  define: function define (name, config) {
+
     viewMgr.process(name, config);
+
   },
-  defineController: function (name, config) {
+  defineController: function defineController (name, config) {
+
     controllerMgr.process(name, config);
+
   },
-  defineUtil: function (name, config) {
+  defineUtil: function defineUtil (name, config) {
+
     utilMgr.process(name, config);
+
   },
-  widget: function (xtype, config) {
+  widget: function widget (xtype, config) {
+
     return viewMgr.build(xtype, config);
+
   },
-  find: function (widget, selector) {
+  find: function find (widget, selector) {
+
     return $$(widget.getTopParentView().config.id + selector);
+
   },
-  application: function (config) {
+  application: function application (config) {
+
+    config = config || {};
+
     if (!window[config.name]) {
+
       window[config.name] = {};
+
     }
-    async.each(config.requires || [], function (require, callback) {
-      utilMgr.load(require, callback);
-    }, function () {
-      async.each(config.controllers || [], function (controller, callback) {
-        controllerMgr.load(controller, callback);
-      }, function () {
-        webix.ready(function () {
-          var viewport;
-          if (config.autoViewport) {
-            viewport = me.widget("mainViewport");
-          }
-          if (config.launch) {config.launch(viewport); }
-        });
+
+    if (config.loader === false) {
+
+      EW.skipLoading = true;
+
+    }
+
+    async.each(config.requires || [],
+      function requiresHandler (requires, callback) {
+
+        utilMgr.load(requires, callback);
+
+      }, function controllerLoader () {
+
+        async.each(config.controllers || [],
+          function controllerHandler (controller, callback) {
+
+            controllerMgr.load(controller, callback);
+
+          }, function initiation () {
+
+            webix.ready(function readyActions () {
+
+              var viewport;
+
+              if (config.autoViewport) {
+
+                viewport = me.widget("mainViewport");
+
+              }
+
+              if (config.launch) {
+
+                config.launch(viewport);
+
+              }
+
+            });
+
+          });
+
       });
-    });
+
   }
+
 };
 
-},{"./controller":1,"./util":3,"./view":4}]},{},[]);
+},{"./controller":3,"./util":5,"./view":6,"async":1}]},{},[]);
 window.EW = require('extwebix');
