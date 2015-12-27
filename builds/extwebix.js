@@ -120,20 +120,10 @@ module.exports = {
 "use strict";
 
 var me,
-  _,
+  _ = require("lodash"),
   loader = require("./loader");
 
 me = module.exports = {
-
-  /**
-   *
-   * @param dependencies
-   */
-  init: function init (dependencies) {
-
-    _ = dependencies.lodash;
-
-  },
 
   utils: {},
 
@@ -190,7 +180,7 @@ me = module.exports = {
 
 };
 
-},{"./loader":4}],6:[function(require,module,exports){
+},{"./loader":4,"lodash":2}],6:[function(require,module,exports){
 "use strict";
 
 var me,
