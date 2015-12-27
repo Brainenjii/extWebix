@@ -1,8 +1,6 @@
 EW.define("WindowLayout", {
   alias: "windowLayout",
   view: "window",
-  animate: true,
-  position: "center",
   width: 800,
   height: 600,
   move: true,
@@ -20,7 +18,16 @@ EW.define("WindowLayout", {
     }, {
       view: "button",
       width: 40,
-      value: "X"
+      value: "X",
+      on: {
+        onItemClick: function (button) {
+
+          var win = this.getTopParentView();
+
+          win.hide();
+
+        }
+      }
     }]
   },
   body: {
@@ -66,15 +73,25 @@ EW.define("MainViewport", {
     on: {
       onItemClick: function () {
         var win;
+
         if (!this.win) {
+
           this.win = EW.widget("windowLayout");
+
         }
+
         win = this.win;
+
         if (win.isVisible()) {
+
           win.hide();
+
         } else {
+
           win.show();
+
         }
+
       }
     }
   }]
