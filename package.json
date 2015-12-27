@@ -18,5 +18,12 @@
   "dependencies": {
     "async": "^0.9.0",
     "lodash": "^3.7.0"
+  },
+  "browserify": {
+    "transform": [ "browserify-shim" ]
+  },
+  "browserify-shim": {
+    "async": "global:async",
+    "lodash": "global:_"
   }
 }
