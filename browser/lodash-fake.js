@@ -1,11 +1,3 @@
 "use strict";
 
-try {
-
-  module.exports = require("lodash");
-
-} catch (e) {
-
-  module.exports = window._;
-
-}
+module.exports = window._;

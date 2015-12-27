@@ -1,6 +1,16 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
+module.exports = window.async;
+
+},{}],2:[function(require,module,exports){
+"use strict";
+
+module.exports = window._;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
 var me,
   _ = require("lodash"),
   async = require("async"),
@@ -89,7 +99,7 @@ me = module.exports = {
 
 };
 
-},{"./loader":2,"./view":4,"async":"async","lodash":"lodash"}],2:[function(require,module,exports){
+},{"./loader":4,"./view":6,"async":1,"lodash":2}],4:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -106,7 +116,7 @@ module.exports = {
 
 };
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 var me,
@@ -180,7 +190,7 @@ me = module.exports = {
 
 };
 
-},{"./loader":2}],4:[function(require,module,exports){
+},{"./loader":4}],6:[function(require,module,exports){
 "use strict";
 
 var me,
@@ -265,7 +275,7 @@ me = module.exports = {
 
 };
 
-},{"./controller":1,"./loader":2,"async":"async","lodash":"lodash"}],"extwebix":[function(require,module,exports){
+},{"./controller":3,"./loader":4,"async":1,"lodash":2}],"extwebix":[function(require,module,exports){
 "use strict";
 
 var me,
@@ -358,5 +368,5 @@ me = module.exports = {
 
 };
 
-},{"./controller":1,"./util":3,"./view":4,"async":"async"}]},{},[]);
+},{"./controller":3,"./util":5,"./view":6,"async":1}]},{},[]);
 window.EW = require('extwebix');
