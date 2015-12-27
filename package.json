@@ -11,6 +11,10 @@
   },
   "author": "Theodor Shaytanov <brainenjii@gmail.com>",
   "license": "ISC",
+  "browser": {
+    "lodash": "./browser/lodash-fake.js",
+    "async": "./browser/async-fake.js"
+  },
   "dependencies": {
     "async": "^0.9.0",
     "lodash": "^3.7.0"
