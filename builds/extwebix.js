@@ -188,7 +188,7 @@ var me,
   _ = require("lodash"),
   async = require("async"),
   loader = require("./loader"),
-  childFields = ["cells", "body", "rows", "cols", "head"];
+  childFields = ["cells", "body", "rows", "cols", "head", "elements"];
 
 me = module.exports = {
   index: 0,
